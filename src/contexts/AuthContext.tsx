@@ -316,40 +316,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   if (!user) return;
 
   try {
-    console.log("UPDATES:", updates);
-
+    // TEMPORARILY COMMENT THIS BLOCK
+    /*
     if (
       firebaseUser &&
       (updates.displayName !== undefined || updates.photoURL !== undefined)
     ) {
-      console.log("Calling Firebase updateProfile...");
-
       await updateProfile(firebaseUser, {
         displayName: updates.displayName ?? firebaseUser.displayName,
-        photoURL: updates.photoURL ?? firebaseUser.photoURL,
+        photoURL: updates.photoURL ?? firebaseUser.photoURL
       });
-
-      console.log("Firebase updateProfile SUCCESS");
     }
+    */
 
-    console.log("Updating Firestore...");
     await updateUserProfileInDb(user.uid, updates);
 
-    console.log("Firestore SUCCESS");
-
     addNotification(
-      "Profile Updated",
-      "Your profile has been saved successfully.",
-      "success"
+      'Profile Updated',
+      'Your profile has been saved successfully.',
+      'success'
     );
   } catch (err) {
-    console.error("Profile update error:", err);
-
-    addNotification(
-      "Update Failed",
-      "Could not save profile changes. Please try again.",
-      "error"
-    );
+    console.error('Profile update error:', err);
   }
 };
 
