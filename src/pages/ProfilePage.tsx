@@ -80,6 +80,7 @@ export const ProfilePage: React.FC = () => {
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
+    console.log("Saving photo:", photoURL);
     await updateUserProfile({
       displayName: displayName.trim(),
       photoURL: photoURL.trim(),
