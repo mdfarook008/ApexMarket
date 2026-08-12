@@ -317,17 +317,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   try {
     // TEMPORARILY COMMENT THIS BLOCK
-    /*
-    if (
-      firebaseUser &&
-      (updates.displayName !== undefined || updates.photoURL !== undefined)
-    ) {
-      await updateProfile(firebaseUser, {
-        displayName: updates.displayName ?? firebaseUser.displayName,
-        photoURL: updates.photoURL ?? firebaseUser.photoURL
-      });
-    }
-    */
+    if (firebaseUser && updates.displayName !== undefined) {
+  await updateProfile(firebaseUser, {
+    displayName: updates.displayName
+  });
+}
 
     await updateUserProfileInDb(user.uid, updates);
 
