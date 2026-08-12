@@ -312,24 +312,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // ─── UPDATE PROFILE ───
-  const handleUpdateUserProfile = async (updates: Partial<UserProfile>) => {
-    if (!user) return;
-    try {
-      if (firebaseUser && (updates.displayName !== undefined || updates.photoURL !== undefined)) {
-        await updateProfile(firebaseUser, {
-          displayName: updates.displayName ?? firebaseUser.displayName,
-          photoURL: updates.photoURL ?? firebaseUser.photoURL
-        });
-      }
+ const handleUpdateUserProfile = async (updates: Partial<UserProfile>) => {
+  if (!user) return;
 
-      await updateUserProfileInDb(user.uid, updates);
-      // Real-time listener will automatically update local state
-      addNotification('Profile Updated', 'Your profile has been saved successfully.', 'success');
-    } catch (err) {
-      console.error('Profile update error:', err);
-      addNotification('Update Failed', 'Could not save profile changes. Please try again.', 'error');
+  try {
+    console.log("UPDATES:", updates);
+
+    if (
+      firebaseUser &&
+      (updates.displayName !== undefined || updates.photoURL !== undefined)
+    ) {
+      console.log("Calling Firebase updateProfile...");
+
+      await updateProfile(firebaseUser, {
+        displayName: updates.displayName ?? firebaseUser.displayName,
+        photoURL: updates.photoURL ?? firebaseUser.photoURL,
+      });
+
+      console.log("Firebase updateProfile SUCCESS");
     }
-  };
+
+    console.log("Updating Firestore...");
+    await updateUserProfileInDb(user.uid, updates);
+
+    console.log("Firestore SUCCESS");
+
+    addNotification(
+      "Profile Updated",
+      "Your profile has been saved successfully.",
+      "success"
+    );
+  } catch (err) {
+    console.error("Profile update error:", err);
+
+    addNotification(
+      "Update Failed",
+      "Could not save profile changes. Please try again.",
+      "error"
+    );
+  }
+};
 
   // ─── BUY ORDER EXECUTION ───
   const executeBuyOrder = async (asset: Asset, quantity: number): Promise<{ success: boolean; message: string }> => {
